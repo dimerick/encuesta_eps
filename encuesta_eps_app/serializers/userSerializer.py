@@ -17,6 +17,18 @@ class UserSerializer(serializers.ModelSerializer):
         Perfil.objects.create(user=userInstance, **perfilData)
         return userInstance
 
+    def update(self, instance, validated_data):
+        perfil_data = validated_data.pop('perfil')
+
+        print(f"user=instance.username: {instance.id}")
+        perfil = Perfil.objects.get(user=instance.id)
+
+        perfil.ciudad = perfil_data.get('ciudad', perfil.ciudad)
+        perfil.direccion = perfil_data.get('direccion', perfil.direccion)
+        perfil.save()
+        
+        return instance
+
     def to_representation(self, obj):
         user = User.objects.get(id=obj.id)
         perfil = Perfil.objects.get(user=obj.id)
