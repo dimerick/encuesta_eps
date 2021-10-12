@@ -36,5 +36,8 @@ class EncuestaDetailView(APIView):
 
     def delete(self, request, pk, format=None):
         obj = self.get_object(pk)
+        if request.user.perfil.get().id != obj.perfil.id:
+            stringResponse = {'detail':'Unauthorized Request'}
+            return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
         obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
